@@ -70,3 +70,15 @@ unfinished work, bugs and other dragons.
                  [:C3 6]]]
      (dorun (map note-at melody)))
   #+END_SRC
+* Sound Designs with Synthesizers
+** What is sound?
+   - sine waves
+   - amplitude + frequency
+   - wave compositions and overtones
+   - attack, sustain and release
+* Turning Data into Sound
+** Ideas
+   - trigger sounds from different event sources like Twitter, etc.
+   - retrieve metrics from wikipedia articles and turn them into synth
+     configs
+* Combine with Visualizations
