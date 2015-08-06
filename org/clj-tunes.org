@@ -1,0 +1,73 @@
+This document is for collecting and sketching ideas, it is not meant
+to be a user friendly tutorial. There might be inconsistencies,
+unfinished work, bugs and other dragons.
+
+* Test if Overtone works
+
+  #+BEGIN_SRC clojure
+  (use 'overtone.live :as ov)
+  (demo (sin-osc))
+  #+END_SRC
+
+  #+RESULTS:
+  : #<synth-node[loading]: user/audition-synth 32>
+* Playing Piano
+  Use the overtone piano instrument:
+  #+BEGIN_SRC clojure
+  (use 'overtone.inst.piano)
+  #+END_SRC
+
+  #+RESULTS:
+  : nil
+
+  #+BEGIN_SRC clojure
+  ; play the MIDI note 60 (C4)
+  (piano 60)
+
+  ; play an Am chord
+  (doseq [note (chord :A3 :minor)] (piano note))
+  #+END_SRC
+
+  #+RESULTS:
+  : #<synth-node[loading]: overtone.inst.piano/piano 55>nil
+
+  Chords are a vector of notes:
+  #+BEGIN_SRC clojure
+  (chord :A3 :minor)
+  #+END_SRC
+
+  #+RESULTS:
+  | 57 | 64 | 60 |
+* COMMENT Some basic music
+  Let's play a progression of notes first:
+  #+BEGIN_SRC clojure
+  (let metro (metronome 120)
+
+       (defn chord-progression [metro beat]
+         (let [notes (map note [:C3 :E4 :G4])]
+           (at (metro (+ 0 beat)) (piano (nth notes 0)))
+           (at (metro (+ 2 beat)) (piano (nth notes 1)))
+           (at (metro (+ 4 beat)) (piano (nth notes 2)))))
+
+       (chord-progression metro (metro)))
+  #+END_SRC
+
+  This should be less redundant:
+  #+BEGIN_SRC clojure
+    (defn play-note-at!
+      "Plays the provided note pitch at the given position."
+      [[pitch position]]
+      (let [metro (metronome 120)
+            next-beat (metro)
+            instrument piano]
+        (at (metro (+ next-beat position))
+            (instrument (note pitch)))))
+
+    (let [melody [[:C3 0]
+                  [:E3 1]
+                  [:E3 2]
+                  [:G3 3]
+                  [:H2 5]
+                  [:C3 6]]]
+      (dorun (map note-at melody)))
+  #+END_SRC
