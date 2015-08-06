@@ -112,6 +112,7 @@ unfinished work, bugs and other dragons.
     think of relative volumes, like 1 for maximum volume and 0
     for silence.
 
+** Sound Design
 *** Wave compositions and overtones
     To make a sound composed of multiple simple sine waves, we can
     just add them to each other:
