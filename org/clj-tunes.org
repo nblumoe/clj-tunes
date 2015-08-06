@@ -112,6 +112,99 @@ unfinished work, bugs and other dragons.
     think of relative volumes, like 1 for maximum volume and 0
     for silence.
 
+*** Wave compositions and overtones
+    To make a sound composed of multiple simple sine waves, we can
+    just add them to each other:
+    #+BEGIN_SRC clojure
+    (let [tone1 (sin-osc 400)
+          tone2 (sin-osc 800)]
+      (demo (+ tone1 tone2)))
+    #+END_SRC
+    What you hear is the combination of a sine wave with 400Hz and
+    another one with 800Hz.
+
+    You can get an interesting effect when you combine sound with
+    frequencies close to each other. It results in a "wobbling" sound:
+    #+BEGIN_SRC clojure
+    (let [tone1 (sin-osc 300)
+          tone2 (sin-osc 305)
+          tone3 (sin-osc 315)]
+      (demo (+ tone1 tone2 tone3)))
+    #+END_SRC
+
+    Let's go wild a create a sound made out of random frequencies:
+    #+BEGIN_SRC clojure
+    (let [num-tones 5
+          rnd-tone (fn [] (sin-osc (+ 200 (rand-int 800))))
+          tones (repeatedly num-tones rnd-tone)]
+      (demo (apply + tones)))
+    #+END_SRC
+    Congratulations, you just did some computer generated sound design!
+
+*** Additive vs. Subtractive Synthesis
+    As we have seem, we can build different sounds by adding more an
+    more sine waves. This is called additive synthesis and it is a
+    feasible way to build synthesizers.
+
+    However, there is another way: "Subtractive Sound Design" which
+    means we start with a signal that is rich in different frequencies
+    (composed of many waves) and then we subtract certain parts of it,
+    to shape its sound.
+    Subtractive sound design is considered to be easier and it's a bit
+    more common than additive synthesis.
+
+    Here, we go, let us do some subtractive synthesis now. First we
+    want a signal that is very rich, so we can subtract from it.
+    #+BEGIN_SRC clojure
+    (demo (white-noise))
+    #+END_SRC
+    Awesome, we got noise! How could that be any good? Well as it
+    turns out, [[https://en.wikipedia.org/wiki/White_noise][white noise]] is just a random distribution of
+    frequencies with a flat spectrum. Simplified it just means, that
+    every frequency has the same probability of occuring the the
+    sound or that it contains all frequencies.
+    There are other "colors" of noises too, which have other
+    distributions of frequencies and are available in Overtone, too.
+
+    So, with white noise we have a signal that is rich in every
+    frequency in the range, that can be perceived by humans. From this
+    signal we are going to subtract something to give it a different
+    sound:
+    #+BEGIN_SRC clojure
+    (let [num-tones 50
+          rnd-tone (fn [] (sin-osc (+ 200 (rand-int 800))))
+          tones (repeatedly num-tones rnd-tone)]
+      (demo (- (white-noise) (apply + tones))))
+    #+END_SRC
+
+    #+RESULTS:
+    : #<synth-node[loading]: user/audition-synth 81>
+
+    Hm, okay this probably does not sound to great. The thing is, our
+    white noise signal is so rich, that we would need to
+    subtract many, many frequencies and it's hard to predict what the
+    sound will be like.
+    Also be a bit cautious with adding more tones to be subtracted,
+    a few hundred tones can put quite some pressure on your computer.
+
+    Later we will learn more powerful approaches for subtractive synthesis.
+
+    Instead of white noise, let us try another signal to start with:
+    #+BEGIN_SRC clojure
+    (demo (lf-cub 200)) ; cube or rectangle wave
+
+    (demo (lf-tri 200)) ; triangle wave
+
+    (demo (lf-saw 200)) ; sawtooth wave
+    #+END_SRC
+
+    Composing these oscillators give some interesting results more
+    quickly than starting out with white noise and simple sines:
+    #+BEGIN_SRC clojure
+    (let [tone (lf-tri 100)]
+      (demo (- (lf-cub 200) tone)))
+    #+END_SRC
+
 *** attack, sustain and release
 * Turning Data into Sound
 ** Ideas
