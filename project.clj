@@ -4,4 +4,5 @@
   :url "https://github.com/nblumoe/clj-tunes"
   :license {:name "GNU Affero General Public License"
             :url "https://gnu.org/licenses/agpl.html"}
-  :dependencies [[org.clojure/clojure "1.6.0"]])
+  :dependencies [[org.clojure/clojure "1.6.0"]
+                 [overtone "0.9.1"]])
