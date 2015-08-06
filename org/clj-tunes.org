@@ -70,12 +70,41 @@ unfinished work, bugs and other dragons.
                  [:C3 6]]]
      (dorun (map note-at melody)))
   #+END_SRC
-* Sound Designs with Synthesizers
+* Sound Design with Synthesizers
 ** What is sound?
-   - sine waves
-   - amplitude + frequency
-   - wave compositions and overtones
-   - attack, sustain and release
+*** Sine waves
+    All sounds can be described as combinations of sine waves
+    ([[https://en.wikipedia.org/wiki/Fourier_series][Fourier Series]]). A simple, single sine wave is the most "clean"
+    sound. Here is how it sounds:
+    #+BEGIN_SRC clojure
+    (demo (sin-osc))
+    #+END_SRC
+
+    #+RESULTS:
+    : #<synth-node[loading]: user/audition-synth 32>
+
+*** Pitch and Volume: Frequency and Amplitude
+    Frequency means how often per second the wave oscillates. This
+    determines the pitch of the tone. `sin-osc` takes a frequency as
+    the first parameter. Play around with it a bit do get a feel for
+    it:
+    #+BEGIN_SRC clojure
+    (let [frequency 400]
+      (demo (sin-osc frequency)))
+    #+END_SRC
+
+    Amplitude is the "height" or intensity of the sine wave, it
+    determines the volume of the sound. We can use a simple
+    multiplication to change the amplitude of an oscillator:
+    #+BEGIN_SRC clojure
+    (let [frequency 400
+          volume 10]
+      (demo (* (sin-osc frequency)
+               volume)))
+    #+END_SRC
+
+*** wave compositions and overtones
+*** attack, sustain and release
 * Turning Data into Sound
 ** Ideas
    - trigger sounds from different event sources like Twitter, etc.
