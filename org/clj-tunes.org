@@ -5,7 +5,7 @@ unfinished work, bugs and other dragons.
 * Test if Overtone works
 
   #+BEGIN_SRC clojure
-  (use 'overtone.live :as ov)
+  (use 'overtone.live)
   (demo (sin-osc))
   #+END_SRC
 
