@@ -211,37 +211,42 @@ unfinished work, bugs and other dragons.
    #+BEGIN_SRC clojure
    (require '[quil.core :as q])
    (use 'overtone.live)
-   ; (use 'overtone.sc ugens)
-   ; (use 'overtone.libs event)
-
-   (def x (atom 0))
 
    (let [width 600
          height 300
-         max-time 10
+         max-time 1
          max-amplitude 2
          time-scale (/ width max-time)
          amp-scale (/ height 2 max-amplitude)]
 
+     (def sampled-wave (atom [[0 0]]))
+
      (defn draw []
-       (let [offset (/ @x 100)]
-         (q/background 255)
-         (q/with-translation [0 (/ (q/height) 2)]
-           (doseq [t (range 0 10 0.001)]
-             (q/point (* t time-scale)
-                      (* amp-scale (+ (q/sin t)
-                                      (q/sin (* 3 (+ t offset))))))))))
+       (q/background 255)
+       (q/with-translation [0 (/ (q/height) 2)]
+         (doseq [[x y] @sampled-wave]
+           (q/point (* time-scale x)
+                    (* amp-scale y)))))
 
      (q/defsketch sine-plot
        :size [width height]
-       :draw draw))
+       :draw draw)
 
-   (let [tr (impulse 30)
-         step (stepper tr 0 0 1000 1)]
-     (on-event "/count" (fn [msg] (do (println msg)
-                                      (reset! x (last (:args msg)))
-                                      )) ::foo)
-     (demo 30 (send-reply tr "/count" [step] 42)))
+     (let [osc-freq 3
+           sample-freq 300
+           sample-dt (/ 1 sample-freq)
+           tr (impulse sample-freq)
+           step (sin-osc:kr osc-freq)]
+
+       (on-event "/sample-osc"
+                 (fn [{[_ _ osc-value] :args}]
+                   (swap! sampled-wave
+                          #(conj % [(+ sample-dt (first (last %)))
+                                    osc-value])))
+                 ::sample-osc-listener)
+
+       (demo 1 (send-reply tr "/sample-osc" [step]))))
+
    #+END_SRC
 
    #+RESULTS:
