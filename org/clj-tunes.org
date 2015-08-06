@@ -206,6 +206,33 @@ unfinished work, bugs and other dragons.
     #+END_SRC
 
 *** attack, sustain and release
+** Visualizing Waves
+   #+BEGIN_SRC clojure
+   (require '[quil.core :as q])
+
+   (let [width 600
+         height 300
+         max-time 10
+         max-amplitude 2
+         time-scale (/ width max-time)
+         amp-scale (/ height 2 max-amplitude)]
+
+     (defn draw []
+       (q/background 255)
+       (q/with-translation [0 (/ (q/height) 2)]
+         (doseq [t (range 0 10 0.001)]
+           (q/point (* t time-scale)
+                    (* amp-scale (+ (q/sin t)
+                                    (q/sin (* 3 t))))))))
+
+     (q/defsketch sine-plot
+       :size [width height]
+       :draw draw))
+   #+END_SRC
+
+   #+RESULTS:
+   : nil
+
 * Turning Data into Sound
 ** Ideas
    - trigger sounds from different event sources like Twitter, etc.
