@@ -38,36 +38,35 @@ unfinished work, bugs and other dragons.
 
   #+RESULTS:
   | 57 | 64 | 60 |
-* COMMENT Some basic music
-  Let's play a progression of notes first:
-  #+BEGIN_SRC clojure
-  (let metro (metronome 120)
+** Some basic music
+   Let's play a progression of notes first:
+   #+BEGIN_SRC clojure
+   (let [metro (metronome 120)]
+     (defn chord-progression [metro beat]
+       (let [notes (map note [:C3 :E4 :G4])]
+         (at (metro (+ 0 beat)) (piano (nth notes 0)))
+         (at (metro (+ 2 beat)) (piano (nth notes 1)))
+         (at (metro (+ 4 beat)) (piano (nth notes 2)))))
 
-       (defn chord-progression [metro beat]
-         (let [notes (map note [:C3 :E4 :G4])]
-           (at (metro (+ 0 beat)) (piano (nth notes 0)))
-           (at (metro (+ 2 beat)) (piano (nth notes 1)))
-           (at (metro (+ 4 beat)) (piano (nth notes 2)))))
+     (chord-progression metro (metro)))
+   #+END_SRC
 
-       (chord-progression metro (metro)))
-  #+END_SRC
+   This should be less redundant:
+   #+BEGIN_SRC clojure
+   (defn play-note-at!
+     "Plays the provided note pitch at the given position."
+     [[pitch position]]
+     (let [metro (metronome 120)
+           next-beat (metro)
+           instrument piano]
+       (at (metro (+ next-beat position))
+           (instrument (note pitch)))))
 
-  This should be less redundant:
-  #+BEGIN_SRC clojure
-    (defn play-note-at!
-      "Plays the provided note pitch at the given position."
-      [[pitch position]]
-      (let [metro (metronome 120)
-            next-beat (metro)
-            instrument piano]
-        (at (metro (+ next-beat position))
-            (instrument (note pitch)))))
-
-    (let [melody [[:C3 0]
-                  [:E3 1]
-                  [:E3 2]
-                  [:G3 3]
-                  [:H2 5]
-                  [:C3 6]]]
-      (dorun (map note-at melody)))
+   (let [melody [[:C3 0]
+                 [:E3 1]
+                 [:E3 2]
+                 [:G3 3]
+                 [:H2 5]
+                 [:C3 6]]]
+     (dorun (map note-at melody)))
   #+END_SRC
