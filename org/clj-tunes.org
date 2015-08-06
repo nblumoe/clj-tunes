@@ -34,11 +34,9 @@ unfinished work, bugs and other dragons.
 
   Chords are a vector of notes:
   #+BEGIN_SRC clojure
-  (chord :A3 :minor)
+  (chord :A3 :minor) ; => [57 64 60]
   #+END_SRC
 
-  #+RESULTS:
-  | 57 | 64 | 60 |
 ** Some basic music
    Let's play a progression of notes first:
    #+BEGIN_SRC clojure
