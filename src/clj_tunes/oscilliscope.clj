@@ -23,7 +23,7 @@
   `(demo 5 (send-reply ~trigger "/sample-osc" [~osc])))
 
 (defmacro play-osc [osc]
-  `(demo 1 ~osc))
+  `(demo 5 ~osc))
 
 (defn init-osc []
   (let [sample-freq 300
