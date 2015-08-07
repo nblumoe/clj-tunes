@@ -53,9 +53,13 @@
     (defn- draw []
       (q/background 0)
       (q/with-translation [0 (/ (q/height) 2)]
-        (doseq [[x y] @sampled-wave]
-          (q/point (* time-scale x)
-                   (* amp-scale y)))))
+        (loop [points @sampled-wave]
+          (when (next points)
+            (let [[x1 y1] (first points)
+                  [x2 y2] (second points)]
+              (q/line (* time-scale x1) (* amp-scale y1)
+                      (* time-scale x2) (* amp-scale y2))
+              (recur (next points)))))))
 
     (q/defsketch sine-plot
       :size [width height]
