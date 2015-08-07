@@ -63,12 +63,15 @@
       :setup setup
       :display 1)))
 
-(create!)
-(clear-osc!)
+(defn osc-demo
+  "Plot a oscillation and play a corresponding sound."
+  []
+  (create!)
+  (clear-osc!)
 
-(let [trigger (init-osc)]
-  (sample-osc trigger (+ (lf-tri:kr 3)
-                         (lf-cub:kr (+ 1 (* 10 (sin-osc:kr 20)))))))
+  (let [trigger (init-osc)]
+    (sample-osc trigger (+ (lf-tri:kr 3)
+                           (lf-tri:kr (+ 1 (* 10 (sin-osc:kr 20)))))))
 
-(play-osc (+ (lf-tri 280)
-             (lf-tri:ar (+ 100 (* 10 (sin-osc 8))))))
+  (play-osc (+ (lf-tri 280)
+               (lf-tri:ar (+ 100 (* 10 (sin-osc 8)))))))
