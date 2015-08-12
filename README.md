@@ -10,7 +10,8 @@ Berlin, 2015.
 
 - a working [Leiningen][1] setup
 - a working [Overtone][2] setup, which might require additional steps on
-  Linux, please refer to the [corresponding documentation][3]
+  Linux, please refer to the corresponding documentation about
+  [Jack][6] and [SuperCollider][3]
 
 ## Test your installation
 
@@ -32,3 +33,4 @@ GNU Affero General Public License v3
 [3]: https://github.com/overtone/overtone/wiki/Connecting-scsynth
 [4]: http://www.clojurebridge.org/
 [5]: https://en.wikipedia.org/wiki/Sine_wave#Occurrences
+[6]: https://github.com/overtone/overtone/wiki/Installing-and-starting-jack
