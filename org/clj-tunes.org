@@ -96,6 +96,11 @@ Emacs and Org mode.
     (let [frequency 400]
       (demo (sin-osc frequency)))
     #+END_SRC
+    Let's listen to a range of frequencies:
+    #+BEGIN_SRC clojure
+    (for [frequency (range 100 5000 100)]
+      (demo (sin-osc frequency)))
+    #+END_SRC
     The Frequency is usually expressed in the unit Hz which means
     cycles per second.
 
