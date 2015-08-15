@@ -1,16 +1,7 @@
 (ns clj-tunes.oscilliscope
   (:require [quil.core :as q]
             [clj-tunes.tap :as tap]
-            [clj-tunes.synths :as synths]))
-
-;; for whatever reason, we need to create a first sketch before
-;; starting overtone, otherwise an exception is thrown from time to
-;; time
-;; TODO dig into this and fix it
-(q/defsketch foo :size [10 10])
-(quil.applet/applet-close foo)
-
-(use 'overtone.live)
+            [overtone.core :refer :all]))
 
 (defn- setup []
   (q/smooth)
@@ -44,6 +35,7 @@
       :setup setup
       :display 0)))
 
+;; TODO allow plotting multiple oscillators
 (defn plot-osc
   [duration synth & synth-args]
   (stop)
@@ -51,12 +43,4 @@
   (tap/clear-buffer!)
   (apply synth synth-args)
   (tap/start-tapping :buffered? true
-                     :freq 100))
-
-(comment
-  (stop)
-
-  (plot-osc 1 synths/fuzzit 600 1)
-  ; TODO allow plotting multiple oscillators
-
-  )
+                     :freq 300))
