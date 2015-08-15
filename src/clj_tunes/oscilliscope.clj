@@ -11,34 +11,48 @@
 
 (use 'overtone.live)
 
+(def ^:private
+  ^:dynamic
+  *taps* nil)
+
 (def sampled-wave (atom [[0 0]]))
 
 (defn- clear-osc! [] (reset! sampled-wave [[0 0]]))
 
-(defn- store-osc-sample! [value dt]
+(defn- store-osc-sample!
+  "Updates the sampled-wave atom by appending the given value. The
+  time variable for the appended data point is the timestamp of the
+  last point in the existing vectore plus dt."
+  [value dt]
   (swap! sampled-wave #(conj % [(+ dt (first (last %)))
                                 value])))
 
-(defmacro sample-osc [trigger osc]
-  `(demo 5 (send-reply ~trigger "/sample-osc" [~osc])))
+(defsynth tapper
+  "A synth to tap the stereo output bus."
+  [bus 0 freq 300]
+  (tap :stereo-out freq (in:ar bus)))
 
-(defmacro play-osc [osc]
-  `(demo 5 ~osc))
+(defn start-tapping []
+  (let [tapper (tapper)
+        taps (:taps tapper)
+        freq (get-in tapper [:args "freq"])
+        dt (/ 1 freq)]
+    ;; current value of the output bus can be retrieved via get-taps
+    (alter-var-root (var *taps*) (constantly taps))
+    ;; on every sample tap event, append time and amplitude to an atom
+    (on-event "/overtone/tap" (fn [{[_ _ value] :args}]
+                                (store-osc-sample! value dt))
+              ::tapper-listener)))
 
-(defn init-osc []
-  (let [sample-freq 300
-        sample-dt (/ 1 sample-freq)
-        trigger (impulse sample-freq)]
-    (on-event "/sample-osc" (fn [{[_ _ osc-value] :args}]
-                              (store-osc-sample! osc-value sample-dt))
-              ::sample-osc-listener)
-    (clear-osc!)
-    trigger))
+(defn get-taps
+  "Deref and return all of our taps as a plain old map."
+  []
+  (when *taps* (into {} (map (fn [[k v]] [k @v]) *taps*))))
 
 (defn create! [& {:keys [width height max-time max-amplitude]
                   :or {width 600
                        height 300
-                       max-time 5
+                       max-time 3
                        max-amplitude 2}}]
   (let [time-scale (/ width max-time)
         amp-scale (/ height 2 max-amplitude)]
@@ -61,21 +75,16 @@
                       (* time-scale x2) (* amp-scale y2))
               (recur (next points)))))))
 
-    (q/defsketch sine-plot
+    (q/defsketch osc-plot
       :size [width height]
       :draw draw
       :setup setup
       :display 1)))
 
-(defn osc-demo
-  "Plot a oscillation and play a corresponding sound."
+(defn demo-osc
   []
-  (create!)
+  (stop)
   (clear-osc!)
-
-  (let [trigger (init-osc)]
-    (sample-osc trigger (+ (lf-tri:kr 3)
-                           (lf-tri:kr (+ 1 (* 10 (sin-osc:kr 20)))))))
-
-  (play-osc (+ (lf-tri 280)
-               (lf-tri:ar (+ 100 (* 10 (sin-osc 8)))))))
+  (create!)
+  (demo 2 (sin-osc 3))
+  (start-tapping))
