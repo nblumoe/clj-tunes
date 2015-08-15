@@ -233,8 +233,37 @@ Emacs and Org mode.
     #+RESULTS:
     : #<synth-node[loading]: user/audition-synth 839>
 
+*** Modulation
+
+    We can combine oscillators in other ways than by combining their
+    amplitudes. For example we can use a Sawtooth oscillator for
+    generating a sound and control its frequency with another
+    oscillator like this:
+
+    #+BEGIN_SRC clojure
+    (let [base-freq 200
+          mod-freq 10
+          mod-strength 30]
+      (demo 1 (lf-saw (+ base-freq
+                         (* mod-strength
+                            (sin-osc mod-freq))))))
+    #+END_SRC
+
+    #+RESULTS:
+    : #<synth-node[loading]: user/audition-synth 860>
+
+    We are using a base frequency of 200 Hz for the sound
+    generation. To this we add a sinus oscillation with a frequency of
+    10 Hz and an amplitude of 30. So the total signal will have
+    frequencies oscillating from 170 Hz to 230 Hz.
+
+    Using oscillators to change other parameters is called
+    "modulation". You can also apply modulation to all kinds of other
+    parameters.
+
 *** Attack, sustain and release
 ** Visualizing Waves
+
    #+BEGIN_SRC clojure
    (require '[quil.core :as q])
    (use 'overtone.live)
@@ -273,7 +302,6 @@ Emacs and Org mode.
                  ::sample-osc-listener)
 
        (demo 1 (send-reply tr "/sample-osc" [step]))))
-
    #+END_SRC
 
    #+RESULTS:
