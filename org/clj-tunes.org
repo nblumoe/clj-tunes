@@ -313,3 +313,16 @@ Emacs and Org mode.
    - retrieve metrics from wikipedia articles and turn them into synth
      configs
 * Combine with Visualizations
+* Roadmap
+** Oscilloscope
+*** TODO Plot the sound output continuously
+    At the moment, the osilloscope stops all audio output, resets the
+    buffer and then plots the audio output into a fresh, new plot
+    every time. In addition to this, it should be possible to have a
+    continuous plot of the output where synthesizers can be added and
+    removed on the fly.
+    Two options for the continous plotting come to mind:
+    - after every timeslot start plotting again from the right, wiping
+    existing plot contents
+    - scroll continously to the right with the moving signal, thus
+    always show the most recent time window, with constant length
