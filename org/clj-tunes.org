@@ -2,6 +2,9 @@ This document is for collecting and sketching ideas, it is not meant
 to be a user friendly tutorial. There might be inconsistencies,
 unfinished work, bugs and other dragons.
 
+This is a literate programming document, for interactive use with
+Emacs and Org mode.
+
 * Test if Overtone works
 
   #+BEGIN_SRC clojure
