@@ -29,10 +29,11 @@
   (tap :stereo-out freq (in:ar bus)))
 
 (defn start-tapping
-  [& {:keys [buffered?]}]
-  (let [tapper (tapper)
+  [& {:keys [buffered?
+             freq]
+      :or {freq 100}}]
+  (let [tapper (tapper :freq freq)
         taps (:taps tapper)
-        freq (get-in tapper [:args "freq"])
         dt (/ 1 freq)]
     (println "---" buffered?)
     (register-tap-buffer buffered? dt)
