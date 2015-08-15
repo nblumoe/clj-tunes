@@ -70,8 +70,8 @@ Emacs and Org mode.
                  [:G3 3]
                  [:H2 5]
                  [:C3 6]]]
-     (dorun (map note-at melody)))
-  #+END_SRC
+     (dorun (map play-note-at! melody)))
+   #+END_SRC
 * Sound Design with Synthesizers
 ** What is sound?
 *** Sine waves
