@@ -31,7 +31,7 @@
 (defn start-tapping
   [& {:keys [buffered?
              freq]
-      :or {freq 100}}]
+      :or {freq 400}}]
   (let [tapper (tapper :freq freq)
         taps (:taps tapper)
         dt (/ 1 freq)]
