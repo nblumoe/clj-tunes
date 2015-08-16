@@ -35,7 +35,6 @@
   (let [tapper (tapper :freq freq)
         taps (:taps tapper)
         dt (/ 1 freq)]
-    (println "---" buffered?)
     (register-tap-buffer buffered? dt)
     ;; current value of the output bus can be retrieved via get-taps
     (alter-var-root (var *taps*) (constantly taps))))
