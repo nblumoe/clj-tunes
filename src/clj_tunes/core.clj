@@ -12,6 +12,20 @@
 
 (use 'overtone.live)
 
+(defn play-note
+  [music-note synth]
+  (synth (midi->hz (note music-note))))
+
+(let [notes [:C4
+             :D4
+             :A3
+             :E4]]
+  (while true
+    (doseq [note notes]
+      (play-note note synths/gameboy)
+      (Thread/sleep 500))))
+
 (osc/plot-osc 1 synths/fuzzit 300 1)
+(osc/plot-osc 1 synths/gameboy 300)
 
 (stop)
