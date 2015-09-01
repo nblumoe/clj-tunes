@@ -1,7 +1,5 @@
 (ns clj-tunes.core
-  (:require [quil.core :as q]
-            [clj-tunes.synths :as synths]
-            [clj-tunes.oscilliscope :as osc]))
+  (:require [quil.core :as q]))
 
 ;; for whatever reason, we need to create a first sketch before
 ;; starting overtone, otherwise an exception is thrown from time to
@@ -11,6 +9,9 @@
 (quil.applet/applet-close foo)
 
 (use 'overtone.live)
+
+(require '[clj-tunes.synths :as synths])
+(require '[clj-tunes.oscilloscope :as osc])
 
 (defn play-note
   [music-note synth]
