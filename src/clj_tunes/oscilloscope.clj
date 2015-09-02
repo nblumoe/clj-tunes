@@ -1,4 +1,4 @@
-(ns clj-tunes.oscilliscope
+(ns clj-tunes.oscilloscope
   (:require [quil.core :as q]
             [clj-tunes.tap :as tap]
             [overtone.core :refer :all]))
