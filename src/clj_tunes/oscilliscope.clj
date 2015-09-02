@@ -27,13 +27,17 @@
             (recur (next points))))))))
 
 ;; TODO allow plotting multiple oscillators
-(defn plot-osc [duration synth & synth-args]
+(defn plot-osc [duration]
   (q/defsketch osc-plot
     :size [600 600]
     :draw (fn [] (oscilloscope :max-time duration))
     :setup setup
     :display 1)
   (stop)
-  (tap/clear-buffer!)
-  (apply synth synth-args)
+  (tap/clear-buffer!))
+
+(defn tap-sound [duration sample-path]
+  (plot-osc duration)
+  (sample sample-path)
   (tap/start-tapping :buffered? true :freq 300))
+
