@@ -6,31 +6,35 @@
 (defn- setup []
   (q/smooth)
   (q/frame-rate 30)
-  (q/background 0)
-  (q/stroke 0 255 0)
-  (q/fill 0 255 0))
+  (q/background (q/random 0))
+  (q/stroke 0)
+  ;(q/stroke (q/random 255))
+  (q/stroke-weight 3)
+  (q/fill (q/random 255)))
 
 (defn- oscilloscope
   [& {:keys [max-time max-amplitude]
       :or {max-time 1
            max-amplitude 2}}]
-  (let [time-scale (/ (* 3 (q/width)) max-time)
-        amp-scale (/ (* 2 (q/height)) 2 max-amplitude)]
-    (q/background 0)
+  (let [time-scale (/  (* 2(q/width)) max-time)
+        amp-scale (/ (q/height) max-amplitude)]
+    ;(q/background (q/random 255))
+    (q/background 255 255 255)
     (q/with-translation [0 (/ (q/height) 2)]
       (loop [points (tap/get-buffered-taps)]
         (when (next points)
           (let [[x1 y1] (first points)
                 [x2 y2] (second points)]
-            (q/line (* time-scale x1) (* amp-scale y1)
-                    (* time-scale x2) (* amp-scale y2)) ;try flipping the y value (negating it)
-                                                        ; try switching x and y 
+            (q/line (* time-scale x2) (* amp-scale y1) ; x,y values from sound aplitude tapping
+                    (* time-scale x1) (* amp-scale y2)) 
+            (q/line (* time-scale x1) (-(* amp-scale y1)) ;negated y value for a mirrored line
+                   (* time-scale x2) (-(* amp-scale y2))) 
             (recur (next points))))))))
 
 ;; TODO allow plotting multiple oscillators
 (defn plot-osc [duration]
   (q/defsketch osc-plot
-    :size [600 600]
+    :size [1266 668]
     :draw (fn [] (oscilloscope :max-time duration))
     :setup setup
     :display 0)
